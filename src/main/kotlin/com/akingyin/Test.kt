@@ -1,8 +1,12 @@
 package com.akingyin
 
+import java.util.concurrent.atomic.AtomicInteger
+
 object Test {
     @JvmStatic
     fun main(args: Array<String>) {
+
+        val atomicInteger = AtomicInteger(1)
 
         /**
          * 筒右移无符号移动一位，即相当于除2
