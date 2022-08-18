@@ -70,6 +70,104 @@ class ListNode<V> {
 
 
     /**
+     *
+     *
+     * 快慢指针可以很快的找到链表的中点。
+     * 在不知道链表长度的情况下，找到链表的中点，
+     *
+     * @param head
+     */
+    fun fastAndSlowPoint(head:Node<V>):Node<V>{
+        var  slow:Node<V>?= head
+        var  fast:Node<V>?= head
+        while (null != slow?.next && null != fast?.next?.next){
+            //针对偶时，中心点是有两个，是要前一个或后一个
+            slow = slow.next
+            fast = fast.next?.next
+
+
+        }
+
+        println("中点1=${slow?.value}")
+        if(null != fast){
+            if(null != fast.next && null == fast.next?.next){
+                //当前为偶数长度，则有两个中心点
+                println("中心点2=${slow?.next?.value}")
+            }
+        }
+        return head
+    }
+
+    /**
+     * 判断链表是否回文，采用指针快慢法
+     * 回文是指正序和逆序均相同的链表，中心点两边数据对称
+     * @param head
+     * @return
+     */
+    fun isPail(head: Node<V>):Boolean{
+        var  slow:Node<V>?= head
+        var  fast:Node<V>?= head
+        while (null != slow?.next && null != fast?.next?.next){
+            //针对偶时，中心点是有两个，是要前一个或后一个
+            slow = slow.next
+            fast = fast.next?.next
+
+        }
+        var  temp :Node<V>?= null
+        //当前下一个
+        var  cur :Node<V>?=slow?.next
+
+        var  last :Node<V>?= null
+
+        println("slow=${slow?.value},next=${slow?.next?.value}")
+
+        //修改右侧部分next 指针 倒序
+        while (null != cur ){
+            temp  = cur
+            cur = cur.next
+            temp.next = last
+            last = temp
+        }
+
+        val tempData  = slow?.next
+        slow?.next = null
+
+        var leftNode : Node<V>?=head
+        var  rightNode :Node<V>?= last
+        val lastRightDataNode  = rightNode
+
+        var  isPail = true
+        //从两边开始往中间判断
+        while (null != leftNode && null != rightNode){
+            println("left.value=${leftNode.value},${rightNode.value}")
+            if(leftNode.value != rightNode.value){
+                isPail = false
+                break
+            }
+            leftNode = leftNode.next
+            rightNode = rightNode.next
+          //  println("循环2=")
+        }
+
+        //判断完成后再交换回去
+        slow?.next = tempData
+        cur = lastRightDataNode
+        last = null
+
+        println("tempData=${tempData?.value}")
+        //把之前倒序的还原
+        while (null != cur){
+            temp  = cur
+            cur = cur.next
+            temp.next = last
+            last = temp
+        }
+        println("isPail=${isPail}")
+        return  isPail
+    }
+
+
+    /**
      * 双向链表每个节点结构
      * 需要关联上一个，下一个
      * @param V
@@ -110,11 +208,18 @@ class ListNode<V> {
     }
 
 
+
+
     companion object{
         @JvmStatic
         fun main(args: Array<String>) {
             val list = mutableListOf<Node<String>>()
             for(i in 0..10){
+                list.add(Node<String>().apply {
+                    value = "value${i}"
+                })
+            }
+            for(i in 9 downTo 0 ){
                 list.add(Node<String>().apply {
                     value = "value${i}"
                 })
@@ -129,7 +234,9 @@ class ListNode<V> {
             list.forEach {
                 println(it.value+":"+it.next?.value)
             }
-            ListNode<String>().reverseList2(list[0])
+         //   ListNode<String>().fastAndSlowPoint(list[0])
+         //   ListNode<String>().reverseList2(list[0])
+            ListNode<String>().isPail(list[0])
             println("-----------------------------")
             list.forEach {
                 println(it.value+":"+it.next?.value)
