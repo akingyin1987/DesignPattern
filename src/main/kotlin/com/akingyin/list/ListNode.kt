@@ -166,6 +166,58 @@ class ListNode<V> {
         return  isPail
     }
 
+    /**
+     * TODO
+     * 判断链表是否有环，通过快慢指针的方式，当最后快指针为空则表示，当前无环
+     * 若快指针最后与慢指针相同，则表示 有环 （因速度是其两倍，所以在环内不超过2圈就会追上慢指针）
+     * @param head
+     * @return
+     */
+    fun  isLinkedRing(head: Node<V>):Boolean{
+        var  slow:Node<V>?= head
+        var  fast:Node<V>?= head
+        while (null != slow && null != fast){
+            slow = slow.next
+            fast = fast.next?.next
+            if(null == fast || fast == slow){
+                return true
+            }
+        }
+        return false
+    }
+
+    /**
+     * TODO
+     * 找到有环链表的起始节点为(环的开始点)，
+     * 使用快慢指针，当两个指针相遇时，将快指针移到表头，两指针每次都只执行一步 相遇后的节点仅开当前环开始节点
+     * @param head
+     * @return
+     */
+    fun  findLinkRingStartNode(head: Node<V>):Node<V>?{
+        var  slow:Node<V>?= head
+        var  fast:Node<V>?= head
+        while (null != slow && null != fast){
+            slow = slow.next
+            fast = fast.next?.next
+            if(null == fast){
+                return null
+            }
+            if(slow == fast){
+                fast = head
+                break
+            }
+        }
+        //将快指针移到head
+
+        while (null != slow && null != fast){
+            slow = slow.next
+            fast = fast.next
+            if(slow == fast){
+                return fast
+            }
+        }
+        return null
+    }
 
     /**
      * 双向链表每个节点结构
@@ -219,52 +271,57 @@ class ListNode<V> {
                     value = "value${i}"
                 })
             }
-            for(i in 9 downTo 0 ){
-                list.add(Node<String>().apply {
-                    value = "value${i}"
-                })
-            }
+//            for(i in 9 downTo 0 ){
+//                list.add(Node<String>().apply {
+//                    value = "value${i}"
+//                })
+//            }
             for (i in list.indices){
                 if(i < list.size - 1){
                     list[i].next = list[i+1]
+                }else{
+                    list[i].next = list[i/2]
                 }
-
-
             }
             list.forEach {
                 println(it.value+":"+it.next?.value)
             }
          //   ListNode<String>().fastAndSlowPoint(list[0])
          //   ListNode<String>().reverseList2(list[0])
-            ListNode<String>().isPail(list[0])
+          //  ListNode<String>().isPail(list[0])
+            println("当前列表是否有环：${ListNode<String>().isLinkedRing(list[0])}")
+            ListNode<String>().findLinkRingStartNode(list[0])?.let {
+                println("当前链表环的开始节点：${it.value}")
+            }
+
             println("-----------------------------")
             list.forEach {
                 println(it.value+":"+it.next?.value)
             }
-            println("-------------double----------------")
-            val listDouble = mutableListOf<NodeDouble<String>>()
-            for(i in 0..10){
-                listDouble.add(NodeDouble<String>().apply {
-                    value = "value${i}"
-                })
-            }
-            for (i in listDouble.indices){
-                if(i < listDouble.size - 1){
-                    listDouble[i].next = listDouble[i+1]
-                }
-                if(i>0){
-                    listDouble[i].last = listDouble[i-1]
-                }
-
-            }
-            listDouble.forEach {
-                println(it.last?.value+":"+it.value+":"+it.next?.value)
-            }
-            ListNode<String>().reverseDoubleList(listDouble[0])
-            println("-----------------------------")
-            listDouble.forEach {
-                println(it.last?.value+":"+it.value+":"+it.next?.value)
-            }
+//            println("-------------double----------------")
+//            val listDouble = mutableListOf<NodeDouble<String>>()
+//            for(i in 0..10){
+//                listDouble.add(NodeDouble<String>().apply {
+//                    value = "value${i}"
+//                })
+//            }
+//            for (i in listDouble.indices){
+//                if(i < listDouble.size - 1){
+//                    listDouble[i].next = listDouble[i+1]
+//                }
+//                if(i>0){
+//                    listDouble[i].last = listDouble[i-1]
+//                }
+//
+//            }
+//            listDouble.forEach {
+//                println(it.last?.value+":"+it.value+":"+it.next?.value)
+//            }
+//            ListNode<String>().reverseDoubleList(listDouble[0])
+//            println("-----------------------------")
+//            listDouble.forEach {
+//                println(it.last?.value+":"+it.value+":"+it.next?.value)
+//            }
         }
     }
 }
