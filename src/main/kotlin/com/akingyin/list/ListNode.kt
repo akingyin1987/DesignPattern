@@ -296,6 +296,7 @@ class ListNode<V> {
 
             println("-----------------------------")
             list.forEach {
+
                 println(it.value+":"+it.next?.value)
             }
 //            println("-------------double----------------")
