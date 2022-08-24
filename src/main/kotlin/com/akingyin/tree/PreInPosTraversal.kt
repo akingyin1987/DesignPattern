@@ -1,5 +1,6 @@
 package com.akingyin.tree
 
+import java.util.LinkedList
 import java.util.Stack
 
 
@@ -85,11 +86,11 @@ class PreInPosTraversal {
         var  temp  :Node<String> ?= head
         while (stack.isNotEmpty() || null != temp){
             if(null != temp){
-                //当前节点（左边界）放栈中
+                //当前节点（左边界）放栈中 （找每个节点的左边界直至没有）
                 stack.push(temp)
                 temp = temp.left
             }else{
-                //依次取出则为左，并判是否有右节点，有则将其左边界存入栈中
+                //依次取出，并判是否有右节点，有则将其左边界存入栈中
                 temp = stack.pop()
                 println("value=${temp?.value}")
 
@@ -130,6 +131,56 @@ class PreInPosTraversal {
              println("value=${tempStack.pop().value}")
          }
     }
+
+    /**
+     * TODO
+     * 按宽度遍历 仅按层级来遍历
+     *
+     * @param head
+     */
+    fun widthOrderUnRecur(head: Node<String>){
+        //队列 先进先出
+      val queue = LinkedList<Node<String>>()
+      //当前节点层级
+      val  levelMap = hashMapOf<Node<String>,Int>()
+      levelMap[head] = 1
+        //当前层级
+        var curLevel  = 1
+        //当前层级节点数据
+        var curLevelNodes = 0
+        var max  = Int.MAX_VALUE
+      queue.add(head)
+      while (queue.isNotEmpty()){
+          val temp  = queue.pop()
+        val curNodeLevel=   levelMap[temp]?.let { curNodeLevel->
+              if(curNodeLevel == curLevel){
+                  //当前为同一层
+                  curLevelNodes++
+              }else{
+                  //当前为不同的层
+                  max = max.coerceAtLeast(curLevelNodes)
+                  println("当前层级：${curLevel},节点数：${curLevelNodes}")
+                  curLevel++
+
+                  curLevelNodes = 1
+              }
+              curNodeLevel
+          }?:0
+          println("value=${temp.value}，层级=${curNodeLevel}")
+          //先左后右,由于是先进先出，所以总是先输出上一层（从左往右）
+          temp.left?.let {
+              queue.add(it)
+              //当前层级 上一层级子级
+              levelMap[it] = curNodeLevel+1
+          }
+          temp.right?.let {
+              queue.add(it)
+              levelMap[it] = curNodeLevel+1
+          }
+      }
+        println("当前层级：${curLevel},节点数：${curLevelNodes}")
+    }
+
 
 
     companion object{
@@ -200,6 +251,9 @@ class PreInPosTraversal {
                 PreInPosTraversal().inOrder(it)
                 println("------非递归中序---")
                 PreInPosTraversal().inOrderUnRecur(it)
+
+                println("------按层级遍历---")
+                PreInPosTraversal().widthOrderUnRecur(it)
             }
 
         }
